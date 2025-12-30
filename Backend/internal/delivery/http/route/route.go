@@ -26,7 +26,7 @@ func (c *RouteConfig) Setup() {
 	c.SetupAuthAdminRoute()
 	c.SetupAuthSuperAdminRoute()
 	c.SetupAuthDriverRoute()
-	c.SetupAuthDriverRoute()
+	c.SetupAuthEmployeeRoute()
 }
 
 func (c *RouteConfig) SetupGuestRoute() {

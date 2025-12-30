@@ -128,7 +128,7 @@ func NewAuthEmployee(userUseCase *usecase.UserUseCase, tokenUtil *util.TokenUtil
 			userUseCase.Log.Warnf("Failed Auth driver user by token : %+v", err)
 			return fiber.ErrUnauthorized
 		}
-		error := tokenUtil.ValidateDriverRoleJWT(ctx)
+		error := tokenUtil.ValidateEmployeeRoleJWT(ctx)
 		if error != nil {
 			userUseCase.Log.Warnf("Driver is allowed to perform this action : %+v", err)
 			return fiber.ErrUnauthorized

@@ -51,6 +51,15 @@ Content-Type: application/json
 GET http://localhost:3000/api/admin
 Accept: application/json
 Authorization: Bearer {{token}}
+
+
+### Get user profile
+### Get user profile
+GET http://localhost:3000/api/employe
+Accept: application/json
+Authorization: Bearer {{token}}
+
+
 ### Get superadmin
 GET http://localhost:3000/api/superadmin
 Accept: application/json
