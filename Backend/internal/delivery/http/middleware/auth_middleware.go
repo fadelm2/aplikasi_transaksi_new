@@ -112,6 +112,31 @@ func NewAuthDriver(userUseCase *usecase.UserUseCase, tokenUtil *util.TokenUtil) 
 	}
 }
 
+func NewAuthEmployee(userUseCase *usecase.UserUseCase, tokenUtil *util.TokenUtil) fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+
+		request := &model.VerifyUserRequest{Token: ctx.Get("Authorization", "NOT_FOUND")}
+		userUseCase.Log.Debugf("Authorization : %s", request.Token)
+		auth, err := tokenUtil.ParseToken(ctx.UserContext(), request.Token)
+		if err != nil {
+			userUseCase.Log.Warnf("Failed find user by token : %+v", err)
+			return fiber.ErrUnauthorized
+		}
+		ctx.Locals("auth", auth)
+		err = tokenUtil.ValidateJWT(ctx)
+		if err != nil {
+			userUseCase.Log.Warnf("Failed Auth driver user by token : %+v", err)
+			return fiber.ErrUnauthorized
+		}
+		error := tokenUtil.ValidateDriverRoleJWT(ctx)
+		if error != nil {
+			userUseCase.Log.Warnf("Driver is allowed to perform this action : %+v", err)
+			return fiber.ErrUnauthorized
+		}
+		return ctx.Next()
+	}
+}
+
 func GetUser(ctx *fiber.Ctx) *model.Auth {
 	return ctx.Locals("auth").(*model.Auth)
 }

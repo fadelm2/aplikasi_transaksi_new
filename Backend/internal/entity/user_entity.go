@@ -1,5 +1,9 @@
 package entity
 
+import (
+	"time"
+)
+
 // User is a struct that represents a user entity
 type User struct {
 	ID          string    `gorm:"column:id;primaryKey"`
@@ -10,9 +14,8 @@ type User struct {
 	CompanyName string    `gorm:"column:company_name"`
 	Token       string    `gorm:"-"`
 	RegionId    string    `gorm:"column:region_id"`
-	CreatedAt   int64     `gorm:"column:created_at;autoCreateTime:milli"`
-	UpdatedAt   int64     `gorm:"column:updated_at;autoCreateTime:milli;autoUpdateTime:milli"`
-	Contacts    []Contact `gorm:"foreignKey:user_id;references:id"`
+	CreatedAt   time.Time `gorm:"column:created_at"`
+	UpdatedAt   time.Time `gorm:"column:updated_at"`
 }
 
 func (u *User) TableName() string {

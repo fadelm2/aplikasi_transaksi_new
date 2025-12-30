@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"golang-clean-architecture/internal/entity"
-	"golang-clean-architecture/internal/gateway/messaging"
 	"golang-clean-architecture/internal/model"
 	"golang-clean-architecture/internal/model/converter"
 	"golang-clean-architecture/internal/repository"
@@ -22,17 +21,15 @@ type UserUseCase struct {
 	Log            *logrus.Logger
 	Validate       *validator.Validate
 	UserRepository *repository.UserRepository
-	UserProducer   *messaging.UserProducer
 	TokenUtil      *util.TokenUtil
 }
 
-func NewUserCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate, userRepository *repository.UserRepository, userProducer *messaging.UserProducer, tokenUtil *util.TokenUtil) *UserUseCase {
+func NewUserCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate, userRepository *repository.UserRepository, tokenUtil *util.TokenUtil) *UserUseCase {
 	return &UserUseCase{
 		DB:             db,
 		Log:            logger,
 		Validate:       validate,
 		UserRepository: userRepository,
-		UserProducer:   userProducer,
 		TokenUtil:      tokenUtil,
 	}
 }
@@ -80,12 +77,6 @@ func (c *UserUseCase) Create(ctx context.Context, request *model.RegisterUserReq
 		return nil, fiber.ErrInternalServerError
 	}
 
-	event := converter.UserToEvent(user)
-	c.Log.Info("Publishing user Created event")
-	if err = c.UserProducer.Send(event); err != nil {
-		c.Log.Warnf("Failed to publish user Created event: %v", err)
-		return nil, fiber.ErrInternalServerError
-	}
 	return converter.UserToResponse(user), nil
 
 }
@@ -174,13 +165,6 @@ func (c *UserUseCase) Logout(ctx context.Context, request *model.LogoutUserReque
 		return false, fiber.ErrInternalServerError
 	}
 
-	event := converter.UserToEvent(user)
-	c.Log.Info("Publishing user created event")
-	if err := c.UserProducer.Send(event); err != nil {
-		c.Log.Warnf("Failed publish user created event : %+v", err)
-		return false, fiber.ErrInternalServerError
-	}
-
 	return true, nil
 
 }
@@ -218,12 +202,6 @@ func (c *UserUseCase) Update(ctx context.Context, request *model.UpdateUserReque
 
 	if err := tx.Commit().Error; err != nil {
 		c.Log.Warnf("Failed commit transaction : %+v", err)
-		return nil, fiber.ErrInternalServerError
-	}
-	event := converter.UserToEvent(user)
-	c.Log.Info("Publishing user created event")
-	if err := c.UserProducer.Send(event); err != nil {
-		c.Log.Warnf("Failed publish user created event : %+v", err)
 		return nil, fiber.ErrInternalServerError
 	}
 

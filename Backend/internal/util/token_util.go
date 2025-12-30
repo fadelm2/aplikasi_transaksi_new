@@ -140,6 +140,20 @@ func (t TokenUtil) ValidateDriverRoleJWT(context *fiber.Ctx) error {
 
 	return errors.New("invalid driver token provided")
 }
+func (t TokenUtil) ValidateEmployeeRoleJWT(context *fiber.Ctx) error {
+	token, err := t.getToken(context)
+	if err != nil {
+		return err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	userRole := claims["role"].(string)
+	if ok && token.Valid && userRole == "5" {
+		return nil
+	}
+
+	return errors.New("invalid driver token provided")
+}
 
 func (t TokenUtil) ParseToken(ctx context.Context, jwtToken string) (*model.Auth, error) {
 	// 🔹 Buang "Bearer "

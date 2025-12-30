@@ -17,6 +17,16 @@ Content-Type: application/json
   "id": "driver1",
   "password": "123457"
 }
+### Login karyawan
+
+POST http://localhost:3000/api/users/_login
+Content-Type: application/json
+
+{
+  "id": "karyawan",
+  "password": "123457"
+}
+
 
 ### Login  superadmin
 

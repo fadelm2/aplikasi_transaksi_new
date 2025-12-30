@@ -12,7 +12,6 @@ func main() {
 	validate := config.NewValidator(viperConfig)
 	app := config.NewFiber(viperConfig)
 	secretkey := config.SecretKey(viperConfig)
-	//producer := config.NewKafkaProducer(viperConfig, log)
 
 	config.Bootstrap(&config.BootstrapConfig{
 		DB:        db,
@@ -21,7 +20,6 @@ func main() {
 		Validate:  validate,
 		Config:    viperConfig,
 		SecretKey: secretkey,
-		//Producer: producer,
 	})
 
 	webPort := viperConfig.GetInt("web.port")

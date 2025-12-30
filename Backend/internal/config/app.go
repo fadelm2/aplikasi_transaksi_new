@@ -4,7 +4,6 @@ import (
 	"golang-clean-architecture/internal/delivery/http"
 	"golang-clean-architecture/internal/delivery/http/middleware"
 	"golang-clean-architecture/internal/delivery/http/route"
-	"golang-clean-architecture/internal/gateway/messaging"
 	"golang-clean-architecture/internal/repository"
 	"golang-clean-architecture/internal/usecase"
 	"golang-clean-architecture/internal/util"
@@ -36,16 +35,13 @@ func Bootstrap(config *BootstrapConfig) {
 	tokenSecretKey := config.SecretKey
 
 	//setup producer
-	userProducer := messaging.NewUserProducer(config.Producer, config.Log)
-	contactProducer := messaging.NewContactProducer(config.Producer, config.Log)
-	addressProducer := messaging.NewAddressProducer(config.Producer, config.Log)
 
 	tokenUtil := util.NewTokenUtil(tokenSecretKey)
 
 	//setup use cases
-	userUseCase := usecase.NewUserCase(config.DB, config.Log, config.Validate, userRepository, userProducer, tokenUtil)
-	ContactUseCase := usecase.NewContactUseCase(config.DB, config.Log, config.Validate, contactRepository, contactProducer)
-	addressUseCase := usecase.NewAddressUseCase(config.DB, config.Log, config.Validate, contactRepository, addressRepository, addressProducer)
+	userUseCase := usecase.NewUserCase(config.DB, config.Log, config.Validate, userRepository, tokenUtil)
+	ContactUseCase := usecase.NewContactUseCase(config.DB, config.Log, config.Validate, contactRepository)
+	addressUseCase := usecase.NewAddressUseCase(config.DB, config.Log, config.Validate, contactRepository, addressRepository)
 
 	//setup controller
 	userController := http.NewUserController(config.Log, userUseCase)
@@ -57,6 +53,7 @@ func Bootstrap(config *BootstrapConfig) {
 	authMiddlewareCustomer := middleware.NewAuthCustomer(userUseCase, tokenUtil)
 	authMiddlewareSuperAdmin := middleware.NewAuthSuperAdmin(userUseCase, tokenUtil)
 	authMiddlewareDriver := middleware.NewAuthDriver(userUseCase, tokenUtil)
+	authMiddlewareEmployee := middleware.NewAuthEmployee(userUseCase, tokenUtil)
 
 	routeConfig := route.RouteConfig{
 		App:                      config.App,
@@ -68,6 +65,7 @@ func Bootstrap(config *BootstrapConfig) {
 		AuthSuperAdminMiddleware: authMiddlewareSuperAdmin,
 		AuthDriverMiddleware:     authMiddlewareDriver,
 		RequestLoggerMiddleware:  requestLogMiddleware,
+		AuthEmployeeMiddleware:   authMiddlewareEmployee,
 	}
 	routeConfig.Setup()
 }

@@ -2,13 +2,13 @@ package usecase
 
 import (
 	"context"
-	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"golang-clean-architecture/internal/entity"
-	"golang-clean-architecture/internal/gateway/messaging"
 	"golang-clean-architecture/internal/model"
 	"golang-clean-architecture/internal/model/converter"
 	"golang-clean-architecture/internal/repository"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/sirupsen/logrus"
@@ -21,17 +21,15 @@ type AddressUseCase struct {
 	Validate          *validator.Validate
 	AddressRepository *repository.AddressRepository
 	ContactRepository *repository.ContactRepository
-	AddressProducer   *messaging.AddressProduser
 }
 
-func NewAddressUseCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate, contactRepository *repository.ContactRepository, addressRepository *repository.AddressRepository, addressProducer *messaging.AddressProduser) *AddressUseCase {
+func NewAddressUseCase(db *gorm.DB, logger *logrus.Logger, validate *validator.Validate, contactRepository *repository.ContactRepository, addressRepository *repository.AddressRepository) *AddressUseCase {
 	return &AddressUseCase{
 		DB:                db,
 		Log:               logger,
 		Validate:          validate,
 		ContactRepository: contactRepository,
 		AddressRepository: addressRepository,
-		AddressProducer:   addressProducer,
 	}
 }
 
@@ -69,11 +67,6 @@ func (c *AddressUseCase) Create(ctx context.Context, request *model.CreateAddres
 		return nil, fiber.ErrInternalServerError
 	}
 
-	event := converter.AddressToEvent(address)
-	if err := c.AddressProducer.Send(event); err != nil {
-		c.Log.WithError(err).Error("failed to publish address event")
-		return nil, fiber.ErrInternalServerError
-	}
 	return converter.AddressToResponse(address), nil
 }
 
@@ -112,11 +105,6 @@ func (c *AddressUseCase) Update(ctx context.Context, request *model.UpdateAddres
 		return nil, fiber.ErrInternalServerError
 	}
 
-	event := converter.AddressToEvent(address)
-	if err := c.AddressProducer.Send(event); err != nil {
-		c.Log.WithError(err).Error("failed to publish address event")
-		return nil, fiber.ErrInternalServerError
-	}
 	return converter.AddressToResponse(address), nil
 }
 

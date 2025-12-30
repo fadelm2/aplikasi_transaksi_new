@@ -1,15 +1,19 @@
 package model
 
+import (
+	"time"
+)
+
 type UserResponse struct {
-	ID          string `json:"id"`
-	Name        string `json:"username"`
-	RoleID      int    `json:"role_id"`
-	CompanyName string `json:"company_name"`
-	Email       string `json:"email"`
-	Token       string `json:"token"`
-	RegionId    string `json:"region_id"`
-	CreatedAt   int64  `json:"created_at"`
-	UpdatedAt   int64  `json:"updated_at"`
+	ID          string    `json:"id"`
+	Name        string    `json:"username"`
+	RoleID      int       `json:"role_id"`
+	CompanyName string    `json:"company_name"`
+	Email       string    `json:"email"`
+	Token       string    `json:"token"`
+	RegionId    string    `json:"region_id"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 type UserResponse1 struct {

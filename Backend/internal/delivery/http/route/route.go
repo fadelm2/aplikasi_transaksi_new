@@ -15,6 +15,7 @@ type RouteConfig struct {
 	AuthAdminMiddleware      fiber.Handler
 	AuthSuperAdminMiddleware fiber.Handler
 	AuthDriverMiddleware     fiber.Handler
+	AuthEmployeeMiddleware   fiber.Handler
 	AuthMiddleWare           fiber.Handler
 	RequestLoggerMiddleware  fiber.Handler
 }
@@ -24,6 +25,7 @@ func (c *RouteConfig) Setup() {
 	c.SetupAuthRoute()
 	c.SetupAuthAdminRoute()
 	c.SetupAuthSuperAdminRoute()
+	c.SetupAuthDriverRoute()
 	c.SetupAuthDriverRoute()
 }
 
@@ -45,6 +47,16 @@ func (c *RouteConfig) SetupAuthDriverRoute() {
 	driver.Get("/", func(ctx *fiber.Ctx) error {
 		return ctx.JSON(fiber.Map{
 			"message": "Driver API is accessible",
+		})
+	})
+
+}
+
+func (c *RouteConfig) SetupAuthEmployeeRoute() {
+	driver := c.App.Group("/api/employe", c.AuthEmployeeMiddleware)
+	driver.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.JSON(fiber.Map{
+			"message": "Employee API is accessible",
 		})
 	})
 
