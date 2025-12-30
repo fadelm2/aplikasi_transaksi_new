@@ -1,6 +1,6 @@
 CREATE TABLE transactions (
                               id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                              cashier_id BIGINT UNSIGNED,
+                              cashier_id VARCHAR(100),
                               customer_name TEXT,
                               total_amount DECIMAL(15,2),
                               cash_amount DECIMAL(15,2),
@@ -18,4 +18,4 @@ CREATE TABLE transactions (
 
                               KEY idx_transactions_deleted_at (deleted_at),
                               KEY idx_transactions_cashier_id (cashier_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci

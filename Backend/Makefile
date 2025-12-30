@@ -1,6 +1,6 @@
 MIGRATE = migrate
 MIGRATIONS_DIR = db/migrations
-DB_URL = "mysql://root:fadel123@tcp(localhost:3307)/golang_architecture_jwt?charset=utf8mb4&parseTime=True&loc=Local"
+DB_URL = "mysql://root:fadel123@tcp(localhost:3307)/aplikasi_transaksi?charset=utf8mb4&parseTime=True&loc=Local"
 
 
 

@@ -5,7 +5,7 @@ CREATE TABLE roles
     name VARCHAR(100) NOT NULL,
     description VARCHAR(100) not null,
     PRIMARY KEY (id)
-) ENGINE = InnoDB;
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 insert into roles(id, name, description) VALUE (2, 'customers', 'customers');
 insert into roles(id, name, description) VALUE (1, 'admin', 'Admin');

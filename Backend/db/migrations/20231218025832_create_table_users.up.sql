@@ -6,8 +6,8 @@ CREATE TABLE users (
                        password     VARCHAR(255) NOT NULL,
                        company_name VARCHAR(255) NOT NULL,
                        created_at TIMESTAMP NULL DEFAULT NULL,
-                       updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-) ENGINE=InnoDB;
+                       updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO users
 (id, role_id, username, email, password, company_name, created_at, updated_at)

@@ -20,4 +20,4 @@ CREATE TABLE transaction_items (
                                    KEY idx_transaction_items_deleted_at (deleted_at),
                                    KEY idx_transaction_items_transaction_id (transaction_id),
                                    KEY idx_transaction_items_product_id (product_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
